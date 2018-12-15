@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>雒媒平台</title>
+<style>
+a{
+    text-decoration: none;
+}
+
+
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+}
+
+ul.pagination li a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+</style>
+<script>
+        function cateForm(cate_id) {
+        $('input[name=cate_id]').val(cate_id);
+        $('#search_form').submit();
+    }
+       function timeForm(time_type) {
+        $('input[name=time_type]').val(time_type);
+        $('#search_form').submit();
+    }
+    function readOrderForm(read_order) {
+        $('input[name=read_order]').val(read_order);
+        $('#search_form').submit();
+    }
+    function submitForm(){
+        $('#search_form').submit();
+    }
+</script>
+
+</head>
+<body>
+
+<fieldset>
+    <form method="post" action="/search/" id="search_form">
+        {% csrf_token %}
+    <legend><b>今日头条</b></legend>
+    <div style="text-align: right"><a href="#">请登录</a></div>
+        <div>
+            <h2>领域</h2>
+            <label><input type="radio" checked="true" onclick="cateForm()" name="cate_id" value="" />全部</label>
+            <label><input type="radio"  onclick="cateForm(69)" name="cate_id" value="[二手房]"/>二手房</label>
+            <label><input type="radio"  onclick="cateForm(68)" name="cate_id" value="[家装]"/>家装</label>
+            <label><input type="radio"  onclick="cateForm(67)" name="cate_id" value="园艺"/>园艺</label>
+        <div>
+            <h2>按时间</h2>
+            <label><input type="radio" checked="true" onclick="timeForm();return false;" name="time_type" value="" />全部</label>
+            <label><input type="radio"  onclick="timeForm(1);return false;" name="time_type" value="1"/>一小时内</label>
+            <label><input type="radio"  onclick="timeForm(2);return false;" name="time_type" value="2"/>八小时内</label>
+            <label><input type="radio"  onclick="timeForm(3);return false;" name="time_type" value="3"/>二十四小时内</label>
+            <label><input type="radio"  onclick="timeForm(4);return false;" name="time_type" value="4"/>一周内</label>
+            <label><input type="radio"  onclick="timeForm(5);return false;" name="time_type" value="5"/>一个月内</label>
+            <label><input type="radio"  onclick="timeForm(6);return false;" name="time_type" value="6"/>一年内</label><br>
+            <h2>按阅读量</h2>
+            <label><input type="radio" checked="true" onclick="readOrderForm()" name="read_order" value=""/>默认</label>
+            <label><input type="radio"  onclick="readOrderForm(2);return false;"  name="read_order" value="2"/>阅读从大到小</label>
+            <label><input type="radio"  onclick="readOrderForm(1);return false;" name="read_order" value="1"/>阅读从小到大</label>
+            <label><input type="radio"  onclick="readOrderForm(4);return false;"  name="read_order" value="4"/>评论大到小</label>
+            <label><input type="radio"  onclick="readOrderForm(3);return false;" name="read_order" value="3"/>评论小到大</label>
+        </div><br>
+<div >
+
+
+        <div>
+            <input type="text" name="search" />
+            <input type="button" onclick="submitForm();return false;" value="搜索"/>
+
+        </div>
+
+
+</div>
+
+    </div>
+    </form>
+</fieldset><br><br>
+<div style="border: solid">
+    <table border="1">
+        <thead>
+            <tr>
+                <th width="500">标题</th>
+                <th width="100">作者</th>
+                <th width="200" >发布时间</th>
+                <th width="100">阅读</th>
+                <th width="100"> 评论</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for data in contacts %}
+            <tr>
+                <td>{{ data.Classify }}<a href="/content/{{ data.id }}/" style="text-decoration: none;">{{ data.Title }}</a></td>
+                <td style="text-align: center">{{ data.Author }}</td>
+                <td style="text-align: center">{{ data.Time }}</td>
+                <td style="text-align: center">
+                    {% if data.Reading != ' ' %}
+                    {{ data.Reading }}
+                    {% else %}
+                         -
+                    {% endif %}
+                </td>
+                <td style="text-align: center">{{ data.Comment }}</td>
+            </tr>
+
+        {% endfor %}
+        </tbody><br>
+
+
+    </table>
+
+
+<br>
+<div name="page" style="text-align: right" >
+<nav aria-label="Pag navigation">
+    <ul class="pagination" >
+       <li> <a href="?page=1">首页</a></li>
+        {% if contacts.has_previous %}
+            <li><a href="?page={{ contacts.previous_page_number }}" aria-label="Previous">上一页</a></li>
+
+
+        {% endif %}
+
+        {% for pg in contacts.paginator.page_range %}
+            {% if contacts.number == pg %}
+            <li >
+            <a href="?page={{ pg }}">{{ pg }}</a>
+            </li>
+            {% else %}
+            <li  >
+            <a href="?page={{ pg }}">{{ pg }}</a>
+            </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if contacts.has_next %}
+
+            <li><a href="?page={{ contacts.next_page_number }}" aria-label="Next">下一页</a></li>
+
+        {% endif %}
+    </ul>
+</nav>
+</div>
+</div>
+</body>
+</html>

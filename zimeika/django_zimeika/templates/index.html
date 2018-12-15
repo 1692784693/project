@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>雒媒平台</title>
+<style>
+a{
+    text-decoration: none;
+}
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+}
+
+ul.pagination li a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+</style>
+
+</head>
+<body>
+
+<fieldset>
+    <legend><b>今日头条</b></legend>
+    <div style="text-align: right"><a href="#">请登录</a></div>
+        <div>
+            <h2>领域</h2>
+            <b><label><a href="/fields/num=0/"  >全部</a></label></b>&nbsp;
+            <b><label><a  href="/fields/num=69/"  >法律</a></label></b>&nbsp;
+            <b><label><a  href="/fields/num=68/" >技术</a></label></b>&nbsp;
+            <b><label><a   href="/fields/num=67/" >十九大</a></label></b>&nbsp;
+            <b><label><a  href="/fields/num=66/" >移民</a></label></b>
+        <div>
+            <h2>按时间</h2>
+            <label><input type="radio" checked="true" onclick="" name="time" />全部</label>
+            <label><input type="radio"  onclick="" name="time" />一小时内</label>
+            <label><input type="radio"  onclick="" name="time"/>八小时内</label>
+            <label><input type="radio"  onclick="" name="time"/>二十四小时内</label>
+            <label><input type="radio"  onclick="" name="time"/>一周内</label>
+            <label><input type="radio"  onclick="" name="time"/>一个月内</label>
+            <label><input type="radio"  onclick="" name="time"/>一年内</label><br>
+            <h2>按阅读量</h2>
+            <label><input type="radio" checked="true" onclick="" name="read" />默认</label>
+            <label><input type="radio"  onclick=""  name="read"/>阅读从大到小</label>
+            <label><input type="radio"  onclick="" name="read"/>阅读从小到大</label>
+            <label><input type="radio"  onclick=""  name="read"/>评论大到小</label>
+            <label><input type="radio"  onclick="" name="read"/>评论小到大</label>
+        </div><br>
+<div >
+    <form method="post" action="/search/">
+        {% csrf_token %}
+        <div>
+            <input type="text" name="search" />
+            <input type="submit" value="搜索"/>
+
+        </div>
+
+    </form>
+</div>
+
+    </div>
+</fieldset><br><br>
+<div style="border: solid">
+    <table border="1">
+        <thead>
+            <tr>
+                <th width="500">标题</th>
+                <th width="100">作者</th>
+                <th width="200" >发布时间</th>
+                <th width="100">阅读</th>
+                <th width="100"> 评论</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for data in contacts %}
+            <tr>
+                <td><a href="/content/{{ data.Url }}/" style="text-decoration: none;">{{ data.Classify }}     {{ data.Title }}</a></td>
+                <td>{{ data.Author }}</td>
+                <td>{{ data.Time }}</td>
+                <td>{{ data.Reading }}</td>
+                <td>{{ data.Comment }}</td>
+            </tr>
+
+        {% endfor %}
+        </tbody><br>
+
+
+    </table>
+
+
+<br>
+<div name="page" style="text-align: right" >
+<nav aria-label="Pag navigation">
+    <ul class="pagination" >
+       <li> <a href="?page=1">首页</a></li>
+        {% if contacts.has_previous %}
+            <li><a href="?page={{ contacts.previous_page_number }}" aria-label="Previous">上一页</a></li>
+
+
+        {% endif %}
+
+        {% for pg in contacts.paginator.page_range %}
+            {% if contacts.number == pg %}
+            <li >
+            <a href="?page={{ pg }}">{{ pg }}</a>
+            </li>
+            {% else %}
+            <li  >
+            <a href="?page={{ pg }}">{{ pg }}</a>
+            </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if contacts.has_next %}
+
+            <li><a href="?page={{ contacts.next_page_number }}" aria-label="Next">下一页</a></li>
+
+        {% endif %}
+    </ul>
+</nav>
+</div>
+</div>
+</body>
+</html>

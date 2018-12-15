@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <title>地图显示</title>
+    <style>
+        html,
+        body,
+        #container {
+          width: 100%;
+          height: 100%;
+        }
+         #panel {
+             position: absolute;
+             background-color: white;
+             max-height: 90%;
+             overflow-y: auto;
+             top: 10px;
+             right: 10px;
+             width: 280px;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<p id="panel"></p>
+<!-- 加载地图JSAPI脚本 -->
+<script src="https://webapi.amap.com/maps?v=1.4.10&key=您申请的key值"></script>
+<script type="text/javascript">
+    // var map = new AMap.Map('container', {
+    //     resizeEnable: true, //是否监控地图容器尺寸变化
+    //     zoom:11, //初始化地图层级
+    //     center: [116.397428, 39.90923] //初始化地图中心点
+    // });
+       var map = map = new AMap.Map('container', {
+        resizeEnable: true
+    });
+        AMap.service(["AMap.PlaceSearch"], function() {
+       var placeSearch = new AMap.PlaceSearch({ //构造地点查询类
+            pageSize: 5,
+            pageIndex: 1,
+            city: "010", //城市
+            map: map,
+            panel: "panel"
+        });
+        //关键字查询
+        placeSearch.search('美丽3A大厦');
+});
+</script>
+</body>
+</html>
