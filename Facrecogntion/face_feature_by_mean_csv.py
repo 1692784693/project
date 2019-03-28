@@ -7,6 +7,7 @@ import numpy as np
 import cv2
 import pandas as pd
 
+
 #首先还是初始化128d的人脸特征模型
 recognition = dlib.face_recognition_model_v1('lib/dlib_face_recognition_resnet_model_v1.dat')
 
@@ -28,7 +29,6 @@ def get_xiangliang_distance(fea_1,fea_2):
         return 'Y'
 
 #首先读取存放人脸特征值数据的csv文件
-
 path_face_feature_mean_csv = 'data/feature_mean_all.csv'
 csv_rd = pd.read_csv(path_face_feature_mean_csv)
 
